@@ -3,18 +3,55 @@ import os
 
 app = Flask(__name__)
 
-# HTML für die Auswahl-Seite
+# HTML für die Auswahl-Seite (Handy)
 html = """
 <!doctype html>
 <html>
 <head>
   <title>Teste Render!</title>
   <style>
-    body { font-family: Arial; text-align: center; margin-top: 50px; }
-    button { padding: 15px 30px; font-size: 18px; border-radius: 8px; cursor: pointer; margin: 5px; }
-    input[type=text] { padding: 10px; font-size: 16px; border-radius: 5px; width: 200px; }
-    h1 { color: #333; }
-    form { margin-top: 20px; }
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    h1 {
+      color: #fff;
+      text-shadow: 2px 2px #ff6f91;
+      font-size: 2.5em;
+    }
+    form {
+      margin-top: 30px;
+    }
+    button, input[type=text] {
+      padding: 15px 25px;
+      margin: 10px;
+      font-size: 18px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button {
+      background: #ff6f91;
+      color: white;
+      font-weight: bold;
+    }
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
+    }
+    input[type=text] {
+      border: 2px solid #ff6f91;
+      width: 250px;
+    }
   </style>
 </head>
 <body>
@@ -37,14 +74,32 @@ thanks_html = """
 <head>
   <title>Danke!</title>
   <style>
-    body { font-family: Arial; text-align: center; margin-top: 50px; }
-    h2 { color: green; }
-    a { display: inline-block; margin-top: 20px; text-decoration: none; color: #555; }
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+    }
+    h2 {
+      color: #28a745;
+      font-size: 2em;
+      text-shadow: 1px 1px #fff;
+    }
+    a {
+      display: inline-block;
+      margin-top: 30px;
+      text-decoration: none;
+      color: #555;
+      font-weight: bold;
+    }
+    a:hover {
+      color: #ff6f91;
+    }
   </style>
 </head>
 <body>
   <h2>Danke für deine Antwort! ✅</h2>
-  <a href="/">Zurück</a>
+  <a href="/">Noch einmal</a>
 </body>
 </html>
 """
@@ -56,10 +111,34 @@ results_html = """
 <head>
   <title>Bisherige Antworten</title>
   <style>
-    body { font-family: Arial; background: #f9f9f9; padding: 20px; }
-    h1 { color: #333; }
-    ul { list-style-type: none; padding: 0; }
-    li { background: #eee; margin: 5px 0; padding: 10px; border-radius: 5px; }
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: #fdf6e3;
+      padding: 30px;
+    }
+    h1 {
+      color: #ff6f91;
+      text-align: center;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      max-width: 500px;
+      margin: auto;
+    }
+    li {
+      background: #ffe066;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+      font-weight: bold;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    li:hover {
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
@@ -71,7 +150,7 @@ results_html = """
       {% endfor %}
     </ul>
   {% else %}
-    <p>Noch keine Antworten!</p>
+    <p style="text-align:center;">Noch keine Antworten!</p>
   {% endif %}
 </body>
 </html>
@@ -96,5 +175,5 @@ def results():
     return render_template_string(results_html, votes=votes)
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Render setzt PORT automatisch
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
