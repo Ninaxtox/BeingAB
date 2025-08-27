@@ -1,16 +1,14 @@
 from flask import Flask, render_template_string, request
-import subprocess
-import time
-import requests
+import os
 
 app = Flask(__name__)
 
-# HTML für die Auswahl-Seite (Handy)
+# HTML für die Auswahl-Seite
 html = """
 <!doctype html>
 <html>
 <head>
-  <title>Teste ngrok!</title>
+  <title>Teste Render!</title>
   <style>
     body { font-family: Arial; text-align: center; margin-top: 50px; }
     button { padding: 15px 30px; font-size: 18px; border-radius: 8px; cursor: pointer; margin: 5px; }
@@ -32,7 +30,7 @@ html = """
 </html>
 """
 
-# HTML für die Danke-Nachricht
+# Danke-Nachricht
 thanks_html = """
 <!doctype html>
 <html>
@@ -51,7 +49,7 @@ thanks_html = """
 </html>
 """
 
-# HTML für die Ergebnisse-Seite
+# Ergebnisse-Seite
 results_html = """
 <!doctype html>
 <html>
@@ -90,7 +88,7 @@ def vote():
     answer = request.form.get("answer")
     if answer:
         votes.append(answer)
-        print("👉 Dein Handy hat gewählt:", answer)
+        print("👉 Jemand hat gewählt:", answer)
     return render_template_string(thanks_html)
 
 @app.route("/results")
@@ -98,21 +96,5 @@ def results():
     return render_template_string(results_html, votes=votes)
 
 if __name__ == "__main__":
-    port = 5001
-
-    # Ngrok starten
-    subprocess.Popen(["ngrok", "http", str(port)])
-
-    # Kurze Pause, damit ngrok startet
-    time.sleep(2)
-
-    # Öffentliche URL abrufen
-    try:
-        tunnels = requests.get("http://127.0.0.1:4040/api/tunnels").json()
-        public_url = tunnels['tunnels'][0]['public_url']
-        print(f"📱 Dein öffentlicher Link für Handy: {public_url}")
-    except Exception as e:
-        print("⚠️ Konnte die ngrok-URL nicht abrufen:", e)
-
-    print(f"Starte Flask auf allen Schnittstellen, Port {port}")
+    port = int(os.environ.get("PORT", 5000))  # Render setzt PORT automatisch
     app.run(host="0.0.0.0", port=port, debug=True)
